@@ -46,23 +46,41 @@ st.markdown("""
     margin-bottom: 2rem;
     font-style: italic;
 }
-.user-bubble {
-    background-color: #E8F5E9;
-    padding: 10px 15px;
-    border-radius: 20px 20px 5px 20px;
-    margin: 5px 0;
-    display: inline-block;
-    max-width: 80%;
-    align-self: flex-end;
-}
+/* Chat bubbles - ensure strong contrast on both themes */
+.user-bubble,
 .bot-bubble {
-    background-color: #F1F3F4;
-    padding: 10px 15px;
-    border-radius: 20px 20px 20px 5px;
-    margin: 5px 0;
+    padding: 12px 16px;
+    margin: 8px 0;
     display: inline-block;
     max-width: 80%;
-    align-self: flex-start;
+    line-height: 1.4;
+    font-size: 1rem;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.user-bubble {
+    background-color: #E6F4EA; /* slightly deeper than before */
+    color: #0B2E13; /* dark text for contrast */
+    border-radius: 20px 20px 5px 20px;
+}
+
+.bot-bubble {
+    background-color: #EDEFF2; /* slightly deeper than before */
+    color: #0F172A; /* dark slate text for contrast */
+    border-radius: 20px 20px 20px 5px;
+}
+
+/* Adapt for dark theme */
+@media (prefers-color-scheme: dark) {
+  .user-bubble {
+    background-color: #1F3B2A; /* darker green tint */
+    color: #E6FFEE; /* light text */
+  }
+  .bot-bubble {
+    background-color: #2A2F3A; /* dark slate */
+    color: #F8FAFC; /* light text */
+  }
 }
 </style>
 """, unsafe_allow_html=True)
