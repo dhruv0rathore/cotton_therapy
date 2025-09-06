@@ -6,11 +6,12 @@ from booking import tools, handle_tool_calls
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-load_dotenv(dotenv_path="../.env")
+load_dotenv()
 
 # Configure API key
-api_key = "AIzaSyCMAdSU2OIO72i3TGGOzt6obKHz8SSnrFA"  # Hardcoded for testing
-os.environ["GOOGLE_API_KEY"] = api_key
+api_key = os.environ.get("GOOGLE_API_KEY")
+if not api_key:
+    raise ValueError("GOOGLE_API_KEY environment variable not set. Please add it to your .env file.")
 
 # Configure the API
 genai.configure(api_key=api_key)

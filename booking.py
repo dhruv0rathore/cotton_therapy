@@ -57,7 +57,7 @@ def test_booking():
     from dotenv import load_dotenv
     
     # Load environment variables from .env file
-    load_dotenv(dotenv_path="../.env")
+    load_dotenv()
     
     # Configure API key
     api_key = os.environ.get("GOOGLE_API_KEY")
@@ -71,7 +71,7 @@ def test_booking():
     genai.configure(api_key=api_key)
     
     # Initialize the model - use the flagship model
-    model = genai.GenerativeModel('gemini-1.0-pro')
+    model = genai.GenerativeModel('gemini-1.5-flash-8b-latest')
     
     # Test booking functionality
     print("=== Testing Appointment Booking ===\n")

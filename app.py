@@ -18,8 +18,10 @@ st.set_page_config(
 load_dotenv()
 
 # Configure API key
-api_key = os.environ.get("GOOGLE_API_KEY", "AIzaSyCMAdSU2OIO72i3TGGOzt6obKHz8SSnrFA")
-os.environ["GOOGLE_API_KEY"] = api_key
+api_key = os.environ.get("GOOGLE_API_KEY")
+if not api_key:
+    st.error("GOOGLE_API_KEY is not set. Please add it to your .env file in the project directory.")
+    st.stop()
 
 # Configure the API
 genai.configure(api_key=api_key)

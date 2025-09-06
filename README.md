@@ -4,7 +4,7 @@ An empathetic therapy chatbot with voice capabilities and appointment booking fu
 
 ## Features
 
-- **Empathetic Conversations**: Uses Gemini 1.5 Pro for natural, supportive responses
+- **Empathetic Conversations**: Uses Gemini 1.5 for natural, supportive responses
 - **Voice Interaction**: Speak with the bot and hear its responses
 - **Text Mode**: Traditional text-based chat interface
 - **Appointment Booking**: Mock functionality to book sessions with human therapists
@@ -14,17 +14,14 @@ An empathetic therapy chatbot with voice capabilities and appointment booking fu
 ### 1. Environment Setup
 
 ```bash
-# Clone the repository (if applicable)
-# git clone <repository-url>
-
 # Navigate to the project directory
 cd therapy_bot_mvp
 
-# Create and activate a virtual environment
+# (Optional) Create and activate a virtual environment
 python -m venv venv
 
 # On Windows
-.\venv\Scripts\activate
+.\\venv\\Scripts\\activate
 
 # On macOS/Linux
 # source venv/bin/activate
@@ -33,46 +30,41 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-### 2. API Key Setup
+### 2. Configure API Key
 
-1. Get a Google AI API key from [Google AI Studio](https://ai.google.dev/)
-2. Run the API key setup script:
+Create a file named `.env` in the project directory with the following content:
 
-```bash
-python setup_api_key.py
+```env
+GOOGLE_API_KEY=your_api_key_here
+MODEL_NAME=gemini-1.5-flash-8b-latest
 ```
 
-Follow the prompts to enter your API key. This will create or update the .env file in the parent directory.
+You can get an API key from [Google AI Studio](https://ai.google.dev/).
 
-Alternatively, you can manually set the environment variable:
+### 3. Verify API Connection (optional quick check)
 
-```bash
-# On Windows
-set GOOGLE_API_KEY=your_api_key_here
-
-# On macOS/Linux
-# export GOOGLE_API_KEY=your_api_key_here
-```
-
-### 3. Test API Connection
-
-Before running the full application, test your API connection:
-
-```bash
-python test_api.py
-```
+You can do a quick smoke test by running the CLI app and sending a simple prompt (see below). If you get a response, your API key is set correctly.
 
 ## Running the Application
+
+### Option A: Streamlit UI
+
+```bash
+streamlit run app.py
+```
+
+- Type your messages and press Enter to chat in text mode
+- Toggle "Enable Voice Output" in the sidebar to hear responses
+- Type messages like "Book an appointment with Dr. Smith at 5pm" to trigger the booking tool
+
+### Option B: CLI Chatbot
 
 ```bash
 python main.py
 ```
 
-## Usage
-
-- Type your messages and press Enter to chat in text mode
-- Type 'voice' to switch to voice input mode
-- Type 'text' to switch back to text mode
+- Type 'voice' to switch to voice input mode (requires working microphone and PyAudio)
+- Type 'text' to switch back to text input mode
 - Type 'exit' to quit the application
 
 ## Component Testing
@@ -80,20 +72,24 @@ python main.py
 Test individual components:
 
 ```bash
-# Test voice input/output
+# Test voice input/output (requires microphone and system audio)
 python voice_io.py
 
-# Test appointment booking
+# Test appointment booking tool-calls
 python booking.py
 ```
 
 ## Project Structure
 
-- `main.py`: Main application entry point
-- `bot.py`: Core chatbot logic (alternative entry point)
+- `main.py`: CLI application entry point
+- `app.py`: Streamlit UI application entry point
 - `voice_io.py`: Voice input/output functionality
-- `booking.py`: Appointment booking functionality
-- `test_api.py`: API connection test
+- `booking.py`: Appointment booking tool schema and utilities
+
+## Notes
+
+- If you encounter PyAudio installation issues on Windows and only need text chat and TTS, you can skip voice input tests. Streamlit voice output (gTTS) does not require PyAudio.
+- Ensure your system can play MP3 files from the default handler for TTS playback.
 
 ## Future Enhancements
 

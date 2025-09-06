@@ -7,20 +7,21 @@ import time
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-load_dotenv(dotenv_path="../.env")
+load_dotenv()
 
 # Configure API key
 api_key = os.environ.get("GOOGLE_API_KEY")
 if not api_key:
-    raise ValueError("GOOGLE_API_KEY environment variable not set. Please set it with your Google AI API key.")
+    raise ValueError("GOOGLE_API_KEY environment variable not set. Please add it to your .env file in the project directory.")
 
 # Remove quotes if they exist in the API key
 api_key = api_key.strip("'\"")
 
 genai.configure(api_key=api_key)
 
-# Initialize the model - use the flagship model
-model = genai.GenerativeModel('gemini-1.0-pro')
+# Initialize the model using env or default
+model_name = os.environ.get("MODEL_NAME", "gemini-1.5-flash-8b-latest")
+model = genai.GenerativeModel(model_name)
 
 # Define the tool schema for appointment booking
 tools = [
