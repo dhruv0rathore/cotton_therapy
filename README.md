@@ -1,99 +1,116 @@
-# Cotton Therapy Bot MVP
+# Cotton Therapy — AI Therapy Companion
 
-An empathetic therapy chatbot with voice capabilities and appointment booking functionality, powered by Google's Gemini AI.
+**Live App Deployed on Streamlit:** [https://cottontherapy0.streamlit.app/](https://cottontherapy0.streamlit.app/)
+
+## Overview
+
+Cotton Therapy is an empathetic therapy companion that supports reflective conversations, offers optional voice responses, and can mock-book sessions with a human therapist via function calling. It is powered by Google’s Gemini models.
 
 ## Features
 
-- **Empathetic Conversations**: Uses Gemini 1.5 for natural, supportive responses
-- **Voice Interaction**: Speak with the bot and hear its responses
-- **Text Mode**: Traditional text-based chat interface
-- **Appointment Booking**: Mock functionality to book sessions with human therapists
+  * **Empathetic Chat:** Supportive, concise responses designed for active listening.
+  * **Voice Output:** Toggle on to hear responses via text-to-speech (gTTS).
+  * **Mock Booking:** The model can trigger a `book_appointment` tool to simulate scheduling with a therapist.
+  * **Dual UX:** Streamlit web app and a CLI (optional) for local chats.
 
-## Setup Instructions
+## Architecture
 
-### 1. Environment Setup
+  * `app.py` — Streamlit UI and chat flow with optional voice output.
+  * `main.py` — CLI chatbot entry point and shared response generation.
+  * `booking.py` — Function-calling tool schema and handler for `book_appointment`.
+  * `voice_io.py` — Voice input (microphone) and text-to-speech playback (MP3).
+  * `requirements.txt` — Python dependencies.
+  * `.env` — Environment configuration (`GOOGLE_API_KEY`, `MODEL_NAME`).
 
-```bash
-# Navigate to the project directory
-cd therapy_bot_mvp
+## Quick Start (Local)
 
-# (Optional) Create and activate a virtual environment
-python -m venv venv
+### Prerequisites
 
-# On Windows
-.\\venv\\Scripts\\activate
+  * Python 3.10+ recommended.
+  * A Google AI API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
+  * **Windows note:** Microphone tests may require `PyAudio`. If it's problematic, you can still use the Streamlit app with voice output (no mic needed).
 
-# On macOS/Linux
-# source venv/bin/activate
+### Steps
 
-# Install dependencies
-pip install -r requirements.txt
-```
+1.  **Clone and enter the project**
 
-### 2. Configure API Key
+    ```bash
+    git clone https://github.com/dhruv0rathore/cotton_therapy
+    cd cotton_therapy
+    ```
 
-Create a file named `.env` in the project directory with the following content:
+2.  **Create `.env` file**
+    Create a `.env` file in the project root with the following content:
 
-```env
-GOOGLE_API_KEY=your_api_key_here
-MODEL_NAME=gemini-1.5-flash-8b-latest
-```
+    ```env
+    GOOGLE_API_KEY=your_api_key_here
+    MODEL_NAME=gemini-1.5-flash-latest
+    ```
 
-You can get an API key from [Google AI Studio](https://ai.google.dev/).
+3.  **Create and use a virtual environment**
 
-### 3. Verify API Connection (optional quick check)
+    ```bash
+    python -m venv venv
+    ```
 
-You can do a quick smoke test by running the CLI app and sending a simple prompt (see below). If you get a response, your API key is set correctly.
+      * **Windows PowerShell:** `.\venv\Scripts\Activate.ps1`
+          * If you see an execution policy error, run PowerShell as Admin and execute: `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`. Then activate again.
+      * **Upgrade pip (recommended):** `python -m pip install --upgrade pip`
 
-## Running the Application
+4.  **Install dependencies**
 
-### Option A: Streamlit UI
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-```bash
-streamlit run app.py
-```
+5.  **Run the Streamlit app**
 
-- Type your messages and press Enter to chat in text mode
-- Toggle "Enable Voice Output" in the sidebar to hear responses
-- Type messages like "Book an appointment with Dr. Smith at 5pm" to trigger the booking tool
+    ```bash
+    streamlit run app.py
+    ```
 
-### Option B: CLI Chatbot
+      * If you see “Port 8501 is already in use”, run: `streamlit run app.py --server.port 8502`
 
-```bash
-python main.py
-```
+## How to Use
 
-- Type 'voice' to switch to voice input mode (requires working microphone and PyAudio)
-- Type 'text' to switch back to text input mode
-- Type 'exit' to quit the application
+  * Send a message in the chat box and press Enter.
+  * For booking, try: `“Book an appointment with Dr. Smith at 5pm”`.
+  * For voice output, toggle the “Enable Voice Output” switch in the sidebar to hear responses.
 
-## Component Testing
+## Security and Privacy
 
-Test individual components:
+  * This project is for demonstration and prototyping purposes only.
+  * Do not share sensitive personal information.
+  * Keep your `GOOGLE_API_KEY` private and never commit it to version control.
 
-```bash
-# Test voice input/output (requires microphone and system audio)
-python voice_io.py
+## Development Notes
 
-# Test appointment booking tool-calls
-python booking.py
-```
+### Consistency
 
-## Project Structure
+  * All entry points load environment variables via `python-dotenv` and expect `GOOGLE_API_KEY` in the `.env` file.
+  * The model name is configurable through the `MODEL_NAME` environment variable (default: `gemini-1.5-flash-latest`).
 
-- `main.py`: CLI application entry point
-- `app.py`: Streamlit UI application entry point
-- `voice_io.py`: Voice input/output functionality
-- `booking.py`: Appointment booking tool schema and utilities
+### Function Calling
 
-## Notes
+  * `booking.py` exposes a tool schema for `book_appointment`.
+  * The model may return a tool call; we handle it via `handle_tool_calls()` and stitch the result into the final answer.
 
-- If you encounter PyAudio installation issues on Windows and only need text chat and TTS, you can skip voice input tests. Streamlit voice output (gTTS) does not require PyAudio.
-- Ensure your system can play MP3 files from the default handler for TTS playback.
+### Voice I/O
 
-## Future Enhancements
+  * `voice_io.py` uses `gTTS` to generate an MP3 and plays it using the system's default handler.
+  * Microphone input relies on `SpeechRecognition` + `PyAudio`. This is optional—text chat and TTS work without it.
 
-- Fine-tune on therapy datasets
-- Integrate with real calendar APIs (e.g., Calendly)
-- Add Twilio integration for phone calls
-- Implement user authentication and session history
+## Troubleshooting
+
+  * **Port already in use:** Run `streamlit run app.py --server.port 8502`.
+  * **`GOOGLE_API_KEY` missing:** Ensure a `.env` file exists in the root directory with the `GOOGLE_API_KEY` variable set. In Streamlit Cloud, you must set this in the app's Secrets.
+  * **`PyAudio` on Windows:** If `PyAudio` installation fails, skip local voice input tests. The Streamlit app's voice output will still function correctly.
+  * **Blank or faint chat bubbles:** We enforce high-contrast styles for both light and dark modes. If your browser theme makes bubbles hard to read, perform a hard refresh (Ctrl+F5). If needed, the contrast can be increased further in the CSS styles.
+
+## License
+
+This project is licensed under the MIT License.
+
+## Contributions
+
+Issues and pull requests are welcome. For UI issues, please include steps to reproduce and screenshots.
